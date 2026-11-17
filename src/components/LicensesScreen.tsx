@@ -35,7 +35,7 @@ export function LicensesScreen({ onHome }: { onHome: () => void }) {
           ホームへ
         </button>
       </div>
-      <p className="lede">このアプリに同梱しているフォントとライブラリです。</p>
+      <p className="lede">このアプリに使っているフォント、ライブラリ、効果音、画像です。</p>
 
       <section className="panel license-panel">
         <h2>フォント</h2>
@@ -57,6 +57,23 @@ export function LicensesScreen({ onHome }: { onHome: () => void }) {
             <strong>React、React DOM</strong>
             <span>Copyright (c) Meta Platforms, Inc. and affiliates.</span>
             <a href={asset("licenses/MIT.txt")}>ライセンス原文</a>
+          </li>
+        </ul>
+
+        <h2>効果音</h2>
+        <ul>
+          <li>
+            <strong>効果音ラボ</strong>
+            <span>操作音と結果の効果音に使用しています。</span>
+            <a href="https://soundeffect-lab.info/">soundeffect-lab.info</a>
+          </li>
+        </ul>
+
+        <h2>画像</h2>
+        <ul>
+          <li>
+            <strong>雲の画像</strong>
+            <span>ChatGPT で作成しました。</span>
           </li>
         </ul>
       </section>
