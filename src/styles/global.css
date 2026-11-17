@@ -693,7 +693,10 @@ dialog::backdrop {
 
 .home-foot {
   margin: 0.85rem 0 0;
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1.1rem;
 }
 
 .text-button {

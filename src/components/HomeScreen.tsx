@@ -256,6 +256,14 @@ export function HomeScreen({
         >
           ライセンス
         </button>
+        <a
+          className="text-button"
+          href="https://motacilo.com/privacy/word-shape-quiz.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          プライバシーポリシー
+        </a>
       </p>
     </main>
   );
