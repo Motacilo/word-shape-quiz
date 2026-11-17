@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { preloadSounds, setSoundVolume } from "../audio/sounds.ts";
 import { HomeScreen } from "../components/HomeScreen.tsx";
+import { LicensesScreen } from "../components/LicensesScreen.tsx";
 import { QuizScreen } from "../components/QuizScreen.tsx";
 import { ResultsScreen } from "../components/ResultsScreen.tsx";
 import { SettingsScreen } from "../components/SettingsScreen.tsx";
@@ -16,7 +17,7 @@ import {
 import { loadWordBook, markWord, saveWordBook, wordKey, type WordBook } from "../game/progress.ts";
 import { buildRound, type RoundAnswer } from "../game/quiz.ts";
 
-type Screen = "home" | "words" | "settings" | "quiz" | "results";
+type Screen = "home" | "words" | "settings" | "quiz" | "results" | "licenses";
 
 const FADE_MS = 220;
 const cloudSrc = (file: string) => `${import.meta.env.BASE_URL}clouds/${file}`;
@@ -97,7 +98,9 @@ export function App() {
   };
 
   let content: ReactNode;
-  if (screen === "words") {
+  if (screen === "licenses") {
+    content = <LicensesScreen onHome={() => go("home")} />;
+  } else if (screen === "words") {
     content = <WordsScreen book={book} onHome={() => go("home")} />;
   } else if (screen === "settings") {
     content = (
@@ -135,6 +138,7 @@ export function App() {
         onStart={start}
         onOpenWords={() => go("words")}
         onOpenSettings={() => go("settings")}
+        onOpenLicenses={() => go("licenses")}
       />
     );
   }

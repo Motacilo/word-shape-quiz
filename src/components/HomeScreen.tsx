@@ -24,6 +24,7 @@ export function HomeScreen({
   onStart,
   onOpenWords,
   onOpenSettings,
+  onOpenLicenses,
 }: {
   radius: DifficultyRadius;
   fontId: string;
@@ -36,6 +37,7 @@ export function HomeScreen({
   onStart: () => void;
   onOpenWords: () => void;
   onOpenSettings: () => void;
+  onOpenLicenses: () => void;
 }) {
   const font = QUIZ_FONTS.find((item) => item.id === fontId) ?? QUIZ_FONTS[0];
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -243,6 +245,18 @@ export function HomeScreen({
         {fontError ? <p className="error">{fontError}</p> : null}
         {!fontsReady && !fontError ? <p className="status">フォントを読み込んでいます</p> : null}
       </section>
+      <p className="home-foot">
+        <button
+          className="text-button"
+          type="button"
+          onClick={() => {
+            playSound("decide");
+            onOpenLicenses();
+          }}
+        >
+          ライセンス
+        </button>
+      </p>
     </main>
   );
 }
