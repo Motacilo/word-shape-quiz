@@ -208,6 +208,9 @@ export function QuizScreen({
       {drawError ? <p className="error">{drawError}</p> : null}
 
       <div className={phase === "play" ? "quiz-stage" : `quiz-stage is-${phase}`}>
+        <p className={phase === "play" ? "quiz-mark" : `quiz-mark is-${phase}`} aria-hidden="true">
+          {phase === "correct" ? "〇" : phase === "wrong" ? "✕" : ""}
+        </p>
         <div className="quiz-shape" ref={shapeRef}>
           <canvas
             ref={canvasRef}

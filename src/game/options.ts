@@ -9,10 +9,11 @@ export function quizFontCaption(id: string): string {
 }
 
 export const DIFFICULTIES = [
-  { radius: 16, label: "易しい" },
+  { radius: 8, label: "ほぼ文字" },
+  { radius: 16, label: "かんたん" },
   { radius: 24, label: "ふつう" },
   { radius: 32, label: "むずい" },
-  { radius: 40, label: "雲" },
+  { radius: 40, label: "ほぼ雲" },
 ] as const;
 
 export type DifficultyRadius = (typeof DIFFICULTIES)[number]["radius"];
@@ -36,8 +37,8 @@ export const QUIZ_BACKGROUND = "#FFFFFF";
 
 export const QUIZ_THEME = {
   play: { fill: "#E9F8FF", outline: "#1AA3E0", letter: "#1AA3E0" },
-  correct: { fill: "#FFF4F5", outline: "#FF4D5A", letter: "#FF4D5A" },
-  wrong: { fill: "#F3F6FB", outline: "#1B3A6B", letter: "#1B3A6B" },
+  correct: { fill: "#F2FBF4", outline: "#22AA4E", letter: "#22AA4E" },
+  wrong: { fill: "#FFF0F2", outline: "#E2183C", letter: "#E2183C" },
 } as const;
 
 export const QUIZ_FILL = QUIZ_THEME.play.fill;

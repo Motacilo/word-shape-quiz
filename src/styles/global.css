@@ -244,27 +244,27 @@ dialog::backdrop {
   --theme-rgb: 26 163 224;
   --line: #0e8ec4;
   --cloud-shadow: #8fd4f2;
-  --correct: #ff4d5a;
-  --correct-rgb: 255 77 90;
-  --wrong: #1b3a6b;
-  --wrong-rgb: 27 58 107;
+  --correct: #22aa4e;
+  --correct-rgb: 34 170 78;
+  --wrong: #e2183c;
+  --wrong-rgb: 226 24 60;
   max-width: 52rem;
   margin: 0 auto;
   padding: 1.25rem 1.25rem 3rem;
 }
 
 .quiz[data-phase="correct"] {
-  --theme: #ff4d5a;
-  --theme-rgb: 255 77 90;
-  --line: #e23b48;
-  --cloud-shadow: #ffc4cb;
+  --theme: #22aa4e;
+  --theme-rgb: 34 170 78;
+  --line: #178a3e;
+  --cloud-shadow: #b7e8c6;
 }
 
 .quiz[data-phase="wrong"] {
-  --theme: #1b3a6b;
-  --theme-rgb: 27 58 107;
-  --line: #122848;
-  --cloud-shadow: #c5d0e4;
+  --theme: #e2183c;
+  --theme-rgb: 226 24 60;
+  --line: #c41232;
+  --cloud-shadow: #f6b8c4;
 }
 
 .quiz button {
@@ -471,7 +471,31 @@ dialog::backdrop {
   color: #3d3d3d;
 }
 
+.quiz-mark {
+  position: absolute;
+  z-index: 1;
+  top: 0.85rem;
+  left: 0.85rem;
+  margin: 0;
+  font-size: calc(2.45rem + 10pt);
+  font-weight: 900;
+  line-height: 1;
+  -webkit-text-stroke: 0.04em currentColor;
+  paint-order: stroke fill;
+  color: var(--theme);
+  pointer-events: none;
+}
+
+.quiz-mark.is-correct {
+  top: calc(0.85rem - 3px);
+}
+
+.quiz-mark.is-wrong {
+  top: calc(0.85rem - 8px);
+}
+
 .quiz-stage {
+  position: relative;
   margin-top: 0.5rem;
   background: #fff;
   border: 3px solid var(--theme);

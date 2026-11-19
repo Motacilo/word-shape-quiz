@@ -33,7 +33,7 @@
         </filter>
         <filter id="mokomoko-edge-correct" x="-20%" y="-30%" width="140%" height="170%" color-interpolation-filters="sRGB">
           <feMorphology in="SourceAlpha" operator="dilate" radius="1.5" result="spread" />
-          <feFlood flood-color="#e23b48" result="flood" />
+          <feFlood flood-color="#178a3e" result="flood" />
           <feComposite in="flood" in2="spread" operator="in" result="outline" />
           <feMerge>
             <feMergeNode in="outline" />
@@ -42,7 +42,7 @@
         </filter>
         <filter id="mokomoko-edge-wrong" x="-20%" y="-30%" width="140%" height="170%" color-interpolation-filters="sRGB">
           <feMorphology in="SourceAlpha" operator="dilate" radius="1.5" result="spread" />
-          <feFlood flood-color="#122848" result="flood" />
+          <feFlood flood-color="#c41232" result="flood" />
           <feComposite in="flood" in2="spread" operator="in" result="outline" />
           <feMerge>
             <feMergeNode in="outline" />
