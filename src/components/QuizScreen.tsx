@@ -70,13 +70,39 @@ export function QuizScreen({
         method: "stroke",
       });
       shape.style.width = `min(100%, ${metrics.cssWidth}px)`;
-      canvas.style.width = "100%";
-      canvas.style.height = "auto";
+      canvas.style.removeProperty("width");
+      canvas.style.removeProperty("height");
       setDrawError(null);
     } catch (caught) {
       setDrawError(caught instanceof Error ? caught.message : "描画に失敗しました");
     }
   }, [word, radius, font, phase]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const { body } = document;
+    const viewport = window.visualViewport;
+    root.classList.add("quiz-lock");
+    const pin = () => {
+      const height = viewport?.height ?? window.innerHeight;
+      const offset = viewport?.offsetTop ?? 0;
+      root.style.setProperty("--quiz-viewport", `${height}px`);
+      body.style.transform = offset > 0 ? `translateY(${offset}px)` : "";
+      if (window.scrollX !== 0 || window.scrollY !== 0) window.scrollTo(0, 0);
+    };
+    pin();
+    viewport?.addEventListener("resize", pin);
+    viewport?.addEventListener("scroll", pin);
+    window.addEventListener("scroll", pin, { passive: true });
+    return () => {
+      root.classList.remove("quiz-lock");
+      root.style.removeProperty("--quiz-viewport");
+      body.style.transform = "";
+      viewport?.removeEventListener("resize", pin);
+      viewport?.removeEventListener("scroll", pin);
+      window.removeEventListener("scroll", pin);
+    };
+  }, []);
 
   useEffect(() => {
     const input = inputRef.current;
@@ -220,15 +246,8 @@ export function QuizScreen({
         </div>
       </div>
 
-      <p className="quiz-notice" role="status">
-        {phase === "play" ? (
-          notice || <span className="quiz-hint">Enter でも答えられます。</span>
-        ) : (
-          <>
-            <span className="quiz-result-label">{phase === "correct" ? "正解" : "不正解"}</span>
-            <span className="quiz-hint">Enter で{last ? "結果へ" : "次へ"}</span>
-          </>
-        )}
+      <p className={phase === "play" && notice ? "quiz-notice" : "visually-hidden"} role="status">
+        {phase === "correct" ? "正解" : phase === "wrong" ? "不正解" : notice}
       </p>
 
       <form
@@ -253,6 +272,9 @@ export function QuizScreen({
             autoCorrect="off"
             spellCheck={false}
             enterKeyHint={phase === "play" ? "go" : "next"}
+            onFocus={() => {
+              window.requestAnimationFrame(() => window.scrollTo(0, 0));
+            }}
             onKeyDown={(event) => {
               if (!directAlphabet || event.ctrlKey || event.metaKey || event.altKey) return;
               const input = event.currentTarget;
