@@ -533,6 +533,12 @@ dialog::backdrop {
   box-shadow: 0 0.45rem 0 var(--cloud-shadow);
   padding: 0.75rem;
   min-height: 8rem;
+  cursor: zoom-in;
+}
+
+.quiz-stage:focus-visible {
+  outline: 3px solid #0878b8;
+  outline-offset: 3px;
 }
 
 .quiz-stage canvas {
@@ -1135,10 +1141,62 @@ input[type="range"] {
 }
 
 @media (max-width: 900px) {
-  .quiz-stage {
-    padding: 0.65rem 0.55rem 0.65rem 4.7rem;
+  .quiz-mark {
+    font-size: calc((2.45rem + 10pt) / 2);
   }
 
+  .quiz-mark.is-correct {
+    top: calc(0.85rem - 2px);
+  }
+
+  .quiz-mark.is-wrong {
+    top: calc(0.85rem - 4px);
+  }
+
+  .quiz-stage {
+    --mark-gutter: calc(0.85rem + (2.45rem + 10pt) / 2 + 0.4rem);
+    padding: 0.65rem var(--mark-gutter);
+  }
+}
+
+.zoom-dialog {
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: #0e3044;
+}
+
+.zoom-dialog::backdrop {
+  background: transparent;
+}
+
+.zoom-dialog canvas {
+  display: block;
+  transform-origin: center;
+  touch-action: none;
+}
+
+.zoom-dialog .zoom-close {
+  position: absolute;
+  z-index: 2;
+  top: max(0.75rem, env(safe-area-inset-top));
+  right: max(0.75rem, env(safe-area-inset-right));
+  border: 2px solid #1aa3e0;
+  border-radius: 999px;
+  background: #fff;
+  color: #0878b8;
+  padding: 0.35rem 0.85rem;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 0.18rem 0 #8fd4f2;
 }
 
 @media (max-width: 640px) {

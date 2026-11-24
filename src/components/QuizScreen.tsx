@@ -4,6 +4,7 @@ import type { QuizFont } from "../fonts/loadFonts.ts";
 import { QUIZ_BACKGROUND, QUIZ_THEME, difficultyLabel } from "../game/options.ts";
 import { alphabetFromCode, editGuess, judgeAnswer, keepHalfWidth, type RoundAnswer } from "../game/quiz.ts";
 import { renderWordShape } from "../render/renderShape.ts";
+import { ShapeZoom } from "./ShapeZoom.tsx";
 
 type Phase = "play" | "correct" | "wrong";
 
@@ -37,6 +38,8 @@ export function QuizScreen({
   const caretRef = useRef<number | null>(null);
   const guessRef = useRef("");
   const endingIme = useRef(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
+  const zoomOpenRef = useRef(false);
   const [directAlphabet] = useState(
     () =>
       typeof window !== "undefined" &&
@@ -47,6 +50,7 @@ export function QuizScreen({
   const last = index + 1 >= questions.length;
   phaseRef.current = phase;
   guessRef.current = guess;
+  zoomOpenRef.current = zoomOpen;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -113,8 +117,8 @@ export function QuizScreen({
   }, []);
 
   useEffect(() => {
-    if (phase === "play") inputRef.current?.focus();
-  }, [word, phase]);
+    if (phase === "play" && !zoomOpen) inputRef.current?.focus();
+  }, [word, phase, zoomOpen]);
 
   useLayoutEffect(() => {
     const input = inputRef.current;
@@ -202,6 +206,7 @@ export function QuizScreen({
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (zoomOpenRef.current) return;
       if (event.key !== "Enter" || event.repeat || event.isComposing || composingRef.current) return;
       event.preventDefault();
       if (phaseRef.current === "play") submitRef.current();
@@ -233,7 +238,19 @@ export function QuizScreen({
 
       {drawError ? <p className="error">{drawError}</p> : null}
 
-      <div className={phase === "play" ? "quiz-stage" : `quiz-stage is-${phase}`}>
+      <div
+        className={phase === "play" ? "quiz-stage" : `quiz-stage is-${phase}`}
+        role="button"
+        tabIndex={0}
+        aria-label="問題を拡大表示"
+        onClick={() => setZoomOpen(true)}
+        onKeyDown={(event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          event.stopPropagation();
+          setZoomOpen(true);
+        }}
+      >
         <p className={phase === "play" ? "quiz-mark" : `quiz-mark is-${phase}`} aria-hidden="true">
           {phase === "correct" ? "〇" : phase === "wrong" ? "✕" : ""}
         </p>
@@ -352,6 +369,14 @@ export function QuizScreen({
           {last ? "結果を見る" : "次の問題"}
         </button>
       ) : null}
+      <ShapeZoom
+        open={zoomOpen}
+        word={word}
+        font={font}
+        radius={radius}
+        phase={phase}
+        onClose={() => setZoomOpen(false)}
+      />
     </main>
   );
 }
