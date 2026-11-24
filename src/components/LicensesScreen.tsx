@@ -72,7 +72,7 @@ export function LicensesScreen({ onHome }: { onHome: () => void }) {
         <h2>画像</h2>
         <ul>
           <li>
-            <strong>雲の画像</strong>
+            <strong>雲の画像、案内のアイコン</strong>
             <span>ChatGPT で作成しました。</span>
           </li>
         </ul>

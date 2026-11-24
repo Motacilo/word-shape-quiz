@@ -1,8 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { playResultSounds, playSound } from "../audio/sounds.ts";
 import type { QuizFont } from "../fonts/loadFonts.ts";
-import type { RoundAnswer } from "../game/quiz.ts";
 import { QUIZ_THEME } from "../game/options.ts";
+import {
+  AUTHOR_X_URL,
+  loadPromo,
+  promoAfterShow,
+  promoAfterSkip,
+  savePromo,
+  shouldShowPromo,
+  todayKey,
+} from "../game/promo.ts";
+import type { RoundAnswer } from "../game/quiz.ts";
 
 export function ResultsScreen({
   font,
@@ -17,6 +26,40 @@ export function ResultsScreen({
 }) {
   const correct = answers.filter((item) => item.correct).length;
   const perfect = answers.length > 0 && correct === answers.length;
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const pendingRef = useRef<(() => void) | null>(null);
+  const [promoOpen, setPromoOpen] = useState(false);
+  const [neverAgain, setNeverAgain] = useState(false);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (promoOpen && !dialog.open) dialog.showModal();
+    if (!promoOpen && dialog.open) dialog.close();
+  }, [promoOpen]);
+
+  const leave = (action: () => void) => {
+    playSound("decide");
+    const record = loadPromo();
+    const today = todayKey();
+    if (!shouldShowPromo(record, today)) {
+      savePromo(promoAfterSkip(record));
+      action();
+      return;
+    }
+    pendingRef.current = action;
+    setNeverAgain(false);
+    setPromoOpen(true);
+  };
+
+  const closePromo = () => {
+    savePromo(promoAfterShow(todayKey(), neverAgain));
+    dialogRef.current?.close();
+    setPromoOpen(false);
+    const action = pendingRef.current;
+    pendingRef.current = null;
+    action?.();
+  };
 
   useEffect(() => {
     const id = window.setTimeout(() => playResultSounds(correct, answers.length), 0);
@@ -56,23 +99,44 @@ export function ResultsScreen({
         <button
           className="primary"
           type="button"
-          onClick={() => {
-            playSound("decide");
-            onRetry();
-          }}
+          onClick={() => leave(onRetry)}
         >
           もう一度
         </button>
-        <button
-          type="button"
-          onClick={() => {
-            playSound("decide");
-            onHome();
-          }}
-        >
+        <button type="button" onClick={() => leave(onHome)}>
           ホームへ
         </button>
       </div>
+      <dialog
+        className="promo-dialog"
+        ref={dialogRef}
+        onCancel={(event) => {
+          event.preventDefault();
+          closePromo();
+        }}
+      >
+        <h2>Xもぜひ！</h2>
+        <p>
+          他のアプリなども紹介しています。
+          <br />
+          ぜひフォローしてください！
+        </p>
+        <a className="promo-link" href={AUTHOR_X_URL} target="_blank" rel="noopener noreferrer">
+          <img className="promo-icon" src={`${import.meta.env.BASE_URL}promo-icon.png`} alt="" />
+          @motaciloBlanka
+        </a>
+        <label className="promo-check">
+          <input
+            type="checkbox"
+            checked={neverAgain}
+            onChange={(event) => setNeverAgain(event.target.checked)}
+          />
+          二度と表示しない
+        </label>
+        <button className="primary promo-close" type="button" onClick={closePromo}>
+          閉じる
+        </button>
+      </dialog>
     </main>
   );
 }
