@@ -1159,7 +1159,11 @@ input[type="range"] {
   }
 }
 
-.zoom-dialog {
+.zoom-dialog:not([open]) {
+  display: none;
+}
+
+.zoom-dialog[open] {
   display: grid;
   place-items: center;
   width: 100vw;
@@ -1171,15 +1175,19 @@ input[type="range"] {
   border: none;
   border-radius: 0;
   padding: 0;
-  background: #0e3044;
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+  touch-action: none;
 }
 
 .zoom-dialog::backdrop {
-  background: transparent;
+  background: rgb(8 32 48 / 28%);
 }
 
 .zoom-dialog canvas {
   display: block;
+  background: transparent;
   transform-origin: center;
   touch-action: none;
 }
